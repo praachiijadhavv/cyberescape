@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberEscape - Interactive Cybersecurity Escape Room</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="screen active">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <h1>🔐 CyberEscape</h1>
+            <p>Think Before You Click</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu Screen -->
+    <div id="menuScreen" class="screen">
+        <div class="menu-container">
+            <div class="menu-header">
+                <h1>🔐 CyberEscape</h1>
+                <p class="tagline">Think Before You Click</p>
+            </div>
+
+            <div class="menu-stats">
+                <div class="stat">
+                    <span class="stat-label">Best Score</span>
+                    <span class="stat-value" id="bestScore">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Games Played</span>
+                    <span class="stat-value" id="gamesPlayed">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Levels Completed</span>
+                    <span class="stat-value" id="levelsCompleted">0</span>
+                </div>
+            </div>
+
+            <div class="menu-buttons">
+                <button class="btn btn-primary" id="startGameBtn">🎮 Start Game</button>
+                <button class="btn btn-secondary" id="tutorialBtn">📖 How to Play</button>
+                <button class="btn btn-secondary" id="leaderboardBtn">🏆 Leaderboard</button>
+            </div>
+
+            <div class="difficulty-selector">
+                <label>Select Difficulty:</label>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                    <button class="difficulty-btn" data-difficulty="normal">Normal</button>
+                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-container">
+            <!-- Game Header -->
+            <div class="game-header">
+                <div class="header-left">
+                    <div class="level-info">
+                        <span class="level-number">Level <span id="currentLevel">1</span>/6</span>
+                        <div class="level-title" id="levelTitle">Create a Secure Password</div>
+                    </div>
+                </div>
+                <div class="header-center">
+                    <div class="timer" id="timer">
+                        <span id="timerValue">00:00</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="stats-bar">
+                        <div class="xp-display">
+                            <span id="xpValue">0</span> XP
+                        </div>
+                        <div class="lives-display">
+                            <span id="livesDisplay">❤️❤️❤️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Level Content -->
+            <div class="level-content" id="levelContent">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+
+            <!-- Hint Button -->
+            <div class="hint-section">
+                <button class="btn btn-hint" id="hintBtn">💡 Get Hint</button>
+                <div class="hint-text" id="hintText" style="display: none;"></div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="game-footer">
+                <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
+                <button class="btn btn-primary" id="submitBtn" style="display: none;">✓ Submit Answer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="pauseScreen" class="screen modal-screen">
+        <div class="modal-content">
+            <h2>Game Paused</h2>
+            <p>Your progress has been saved.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="resumeBtn">Resume Game</button>
+                <button class="btn btn-secondary" id="mainMenuBtn">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Complete Screen -->
+    <div id="levelCompleteScreen" class="screen modal-screen">
+        <div class="modal-content">
+            <div class="completion-animation">
+                <div class="trophy">🏆</div>
+                <h2>Level Complete!</h2>
+                <div class="level-stats">
+                    <div class="stat-item">
+                        <span class="label">XP Earned</span>
+                        <span class="value" id="levelXP">+100</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Time</span>
+                        <span class="value" id="levelTime">45s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Accuracy</span>
+                        <span class="value" id="levelAccuracy">100%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="nextLevelBtn">Next Level →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="screen modal-screen">
+        <div class="modal-content game-over">
+            <h2 id="gameOverTitle">Game Over!</h2>
+            <div class="final-stats">
+                <div class="stat-item">
+                    <span class="label">Final Score</span>
+                    <span class="value" id="finalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Levels Cleared</span>
+                    <span class="value" id="levelsClearedCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Total Time</span>
+                    <span class="value" id="totalTime">00:00</span>
+                </div>
+            </div>
+            <div id="certificateContainer" style="display: none;">
+                <div class="certificate">
+                    <h3>🎓 CyberEscape Champion</h3>
+                    <p id="certificateText">Congratulations! You've completed all levels.</p>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="playAgainBtn">Play Again</button>
+                <button class="btn btn-secondary" id="mainMenuBtnGameOver">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Screen -->
+    <div id="tutorialScreen" class="screen">
+        <div class="tutorial-container">
+            <h1>📖 How to Play CyberEscape</h1>
+            <div class="tutorial-content">
+                <div class="tutorial-section">
+                    <h3>🎮 Game Mechanics</h3>
+                    <ul>
+                        <li><strong>6 Levels:</strong> Progress through cybersecurity challenges</li>
+                        <li><strong>Lives:</strong> Start with 3 lives. Wrong answers cost 1 life</li>
+                        <li><strong>XP Points:</strong> Earn points for correct decisions</li>
+                        <li><strong>Timer:</strong> Complete each level within the time limit</li>
+                        <li><strong>Hints:</strong> Use hints to help solve challenges</li>
+                    </ul>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>🔐 The Levels</h3>
+                    <ol>
+                        <li><strong>Level 1 - Create a Secure Password</strong> - Build a strong password that meets security criteria</li>
+                        <li><strong>Level 2 - Spot the Phishing Email</strong> - Identify fake emails trying to steal information</li>
+                        <li><strong>Level 3 - Identify the Fake WhatsApp Message</strong> - Detect social engineering in messages</li>
+                        <li><strong>Level 4 - Detect an OTP Scam</strong> - Learn to recognize OTP phishing attempts</li>
+                        <li><strong>Level 5 - QR Code / UPI Safety Challenge</strong> - Evaluate suspicious payment links</li>
+                        <li><strong>Level 6 - Fake Shopping Website Challenge</strong> - Spot counterfeit e-commerce sites</li>
+                    </ol>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>⭐ Scoring System</h3>
+                    <table>
+                        <tr>
+                            <td>Correct Answer (Easy)</td>
+                            <td>+50 XP</td>
+                        </tr>
+                        <tr>
+                            <td>Correct Answer (Normal)</td>
+                            <td>+100 XP</td>
+                        </tr>
+                        <tr>
+                            <td>Correct Answer (Hard)</td>
+                            <td>+150 XP</td>
+                        </tr>
+                        <tr>
+                            <td>Time Bonus (Complete in 50% of time)</td>
+                            <td>+50 XP</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>💡 Tips</h3>
+                    <ul>
+                        <li>Read each challenge carefully before answering</li>
+                        <li>Use hints if you're unsure (no XP penalty)</li>
+                        <li>Strong passwords have uppercase, lowercase, numbers, and symbols</li>
+                        <li>Watch for common phishing red flags: urgent language, suspicious links, unknown senders</li>
+                        <li>Always verify before clicking or sharing information</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="backToMenuBtn">← Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboardScreen" class="screen">
+        <div class="leaderboard-container">
+            <h1>🏆 Leaderboard</h1>
+            <div class="leaderboard-filters">
+                <button class="filter-btn active" data-filter="all-time">All Time</button>
+                <button class="filter-btn" data-filter="today">Today</button>
+                <button class="filter-btn" data-filter="this-week">This Week</button>
+            </div>
+            <div class="leaderboard-table" id="leaderboardTable">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <button class="btn btn-primary" id="backToMenuFromLeaderboardBtn">← Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="gameData.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
